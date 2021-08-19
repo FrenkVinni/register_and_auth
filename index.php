@@ -6,8 +6,8 @@ use Slim\Factory\AppFactory;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use App\Database;
-use App\Authorization;
-use App\AuthException;
+use App\Registration;
+use App\RegisterException;
 use App\Session;
 
 require __DIR__ . '/vendor/autoload.php';
@@ -36,7 +36,7 @@ $username = $config['username'];
 $password = $config['password'];
 
 $database = new Database($dsn, $username, $password);
-$authorization = new Authorization($database);
+$authorization = new Registration($database);
 
 $app->get('/', function (ServerRequestInterface $request, ResponseInterface $response) use ($twig){
     $body = $twig->render('index.twig');
@@ -67,7 +67,7 @@ $app->post('/register-post', function (ServerRequestInterface $request, Response
     $params = (array) $request->getParsedBody();
     try{
         $authorization->register($params);
-    }catch (AuthException $exception){
+    }catch (RegisterException $exception){
         $session->setData('message', $exception->getMessage());
         return $response->withHeader('Location', '/register')->withStatus(302);
     }

@@ -4,5 +4,5 @@ declare(strict_types=1);
 namespace App;
 
 use Exception;
-class AuthException extends Exception
+class RegisterException extends Exception
 {}
